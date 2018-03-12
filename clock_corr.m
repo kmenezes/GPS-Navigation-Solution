@@ -1,8 +1,9 @@
-function [delta_Tsv_C1, delta_Tsv_P1, delta_Tsv_P2] = clock_corr(SortedData, RcvrtC1,RcvrtP1,RcvrtP2, delta_rel)
+function [delta_Tsv_P1,delta_Tsv_P2,delta_Tsv_C1]=clock_corr(SortedData, tkC1,tkP1,tkP2, delta_rel)
 %Sources
 %http://www.navipedia.net/index.php/Clock_Modelling
 %http://www.navipedia.net/index.php/Relativistic_Clock_Correction
-F = -4.464e-10;
+% Group Delay
+tgd = 
 
 a0 = SortedData(:,25); %SV clock bias or offset???
 a1 = SortedData(:,26); %SV clock drift
@@ -21,7 +22,7 @@ Toc_P2 = RcvrtP2;
 %...in this case, using Nav GPS time for completion.
 t = SortedData(:,26);
 
-delta_Tsv_C1 = a0 + a1.*(t-Toc_C1)+a2.*(t-Toc_C1).^2+delta_rel;
-delta_Tsv_P1 = a0 + a1.*(t-Toc_P1)+a2.*(t-Toc_P1).^2+delta_rel;
-delta_Tsv_P2 = a0 + a1.*(t-Toc_P2)+a2.*(t-Toc_P2).^2+delta_rel;
+delta_Tsv_P1 = a0 + a1.*(t-Toc_C1)+a2.*(t-Toc_C1).^2+delta_rel;
+delta_Tsv_P2 = a0 + a1.*(t-Toc_P1)+a2.*(t-Toc_P1).^2+delta_rel;
+delta_Tsv_C1 = a0 + a1.*(t-Toc_P2)+a2.*(t-Toc_P2).^2+delta_rel;
 end

@@ -51,14 +51,14 @@ disp('Computed A - semimajor axis')
 
 %% Compute tk - Time from ephemeris reference epoch
 % for some reason negative ?
-[tk] = time_epoch(SortedData);
+[tkP1, tkP2, tkC1, tt_P1, tt_P2, tt_C1] = time_epoch(SortedData);
 disp('Computed tk - Time from ephemeris reference epoch')
 
 %% Compute corrected mean motion [radians/s]
 [n] = corr_mean_motion( A, SortedData);
 
 %% Compute Mean anomoly
-[Mk] = mean_anom(SortedData,n,tk);
+[Mk] = mean_anom(SortedData,n,tkC1);
 
 %% Compute Eccentric Anomoly
 [Ek] = ecc_anom(SortedData, Mk);

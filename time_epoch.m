@@ -1,4 +1,4 @@
-function [tk] = time_epoch(SortedData)
+function [tkP1, tkP2, tkC1, tt_P1, tt_P2, tt_C1] = time_epoch(SortedData)
 %
 % Time from ephemeris reference epoch
 % tk = t -toe
@@ -8,10 +8,14 @@ function [tk] = time_epoch(SortedData)
 % Output Array of time in seconds
 %
 
-tk = SortedData(:,52) - SortedData(:,36);
-if(tk > 302400)
-    tk = tk - 604800
-if(tk < -302400)
-    tk = tk + 604800
-end
+c = physconst('LightSpeed');
+
+tt_P1 = SortedData(:,6) - SortedData(:,11)./c;
+tt_P2 = SortedData(:,6) - SortedData(:,12)./c;
+tt_C1 = SortedData(:,6) - SortedData(:,13)./c;
+
+tkP1 = check_tk(tt_P1 - SortedData(:,36));
+tkP2 = check_tk(tt_P2 - SortedData(:,36));
+tkC1 = check_tk(tt_C1 - SortedData(:,36));
+
 end
