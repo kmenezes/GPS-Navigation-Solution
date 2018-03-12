@@ -1,7 +1,8 @@
 function [delta_Tsv_C1, delta_Tsv_P1, delta_Tsv_P2] = clock_corr(SortedData, RcvrtC1,RcvrtP1,RcvrtP2, delta_rel)
 %Sources
 %http://www.navipedia.net/index.php/Clock_Modelling
-%
+%http://www.navipedia.net/index.php/Relativistic_Clock_Correction
+F = -4.464e-10;
 
 a0 = SortedData(:,25); %SV clock bias or offset???
 a1 = SortedData(:,26); %SV clock drift

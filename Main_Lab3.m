@@ -1,6 +1,8 @@
 %% Project Main
 clear all;clc;close all;
 format longg
+%% Reading the Observation and Navigation Files
+
 filename = 'ALGO0010.11N';
 % filename = 'ALGO0010.08N';
 % filename = 'alam3600.02n';
@@ -27,15 +29,41 @@ filename = 'ALGO0010.11O';
 % TGD IODC TransTime FitInterval];
 disp('Observation File Processed')
 
-%% Combining
+%% Combining and Storing necessary parameters
 
 [ SortedData ] = NearestCombiner( Obs_Out, Nav_Out ); 
 disp('Combined Navigation Data and Observation Data')
 
-%% Travel time
+%% Travel time for signal to get to receiver
 
 [ C1tt P1tt P2tt ] = traveltime( SortedData );
+disp('Computed Travel time for signal to get to receiver')
 
-%% Rxcvr time
+%% Rxcvr time in seconds
 
 [RcvrtC1, RcvrtP1,RcvrtP2] = rcvrtime( SortedData, C1tt, P1tt, P2tt );
+disp('Computed Rxcvr time in seconds')
+
+%% Compute A - semimajor axis [in m]
+
+[A] = semi_major(SortedData);
+disp('Computed A - semimajor axis')
+
+%% Compute tk - Time from ephemeris reference epoch
+% for some reason negative ?
+[tk] = time_epoch(SortedData);
+disp('Computed tk - Time from ephemeris reference epoch')
+
+%% Compute corrected mean motion [radians/s]
+[n] = corr_mean_motion( A, SortedData);
+
+%% Compute Mean anomoly
+[Mk] = mean_anom(SortedData,n,tk);
+
+%% Compute Eccentric Anomoly
+[Ek] = ecc_anom(SortedData, Mk);
+
+%% Relativistic Error
+[delta_rel] = rel_corr(SortedData,Mk);
+
+%% Clock Correction
