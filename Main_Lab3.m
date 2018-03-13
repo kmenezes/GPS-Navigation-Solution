@@ -34,15 +34,12 @@ disp('Observation File Processed')
 [ SortedData ] = NearestCombiner( Obs_Out, Nav_Out ); 
 disp('Combined Navigation Data and Observation Data')
 
-%% Travel time for signal to get to receiver
+% %% Travel time for signal to get to receiver
+% 
+% [ C1tt P1tt P2tt ] = traveltime( SortedData );
+% disp('Computed Travel time for signal to get to receiver')
+%removed....
 
-[ C1tt P1tt P2tt ] = traveltime( SortedData );
-disp('Computed Travel time for signal to get to receiver')
-
-%% Rxcvr time in seconds
-
-[RcvrtC1, RcvrtP1,RcvrtP2] = rcvrtime( SortedData, C1tt, P1tt, P2tt );
-disp('Computed Rxcvr time in seconds')
 
 %% Compute A - semimajor axis [in m]
 
@@ -54,6 +51,10 @@ disp('Computed A - semimajor axis')
 [tkP1, tkP2, tkC1, tt_P1, tt_P2, tt_C1] = time_epoch(SortedData);
 disp('Computed tk - Time from ephemeris reference epoch')
 
+%% Rxcvr time in seconds
+
+[RcvrtC1, RcvrtP1,RcvrtP2] = rcvrtime( SortedData, tt_C1, tt_P1, tt_P2 );
+disp('Computed Rxcvr time in seconds')
 %% Compute corrected mean motion [radians/s]
 [n] = corr_mean_motion( A, SortedData);
 
@@ -67,3 +68,12 @@ disp('Computed tk - Time from ephemeris reference epoch')
 [delta_rel] = rel_corr(SortedData,Mk);
 
 %% Clock Correction
+[delta_Tsv_P1,delta_Tsv_P2,delta_Tsv_C1] = clock_corr(SortedData, tkC1,tkP1,...
+    tkP2,RcvrtC1,RcvrtP1,RcvrtP2, delta_rel);
+
+%% True Anomaly
+[Vk] = true_anom(SortedData, Ek);
+
+%% Argument of Latitude
+[phi_k] = arg_lat(SortedData, Vk);
+
