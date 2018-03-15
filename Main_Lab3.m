@@ -77,3 +77,26 @@ disp('Computed Rxcvr time in seconds')
 %% Argument of Latitude
 [phi_k] = arg_lat(SortedData, Vk);
 
+%% Second Harmonic Perturbations
+% Argument of Latitude, Radius, and Inclination Correction, respectively.
+[delta_uk,delta_rk,delta_ik] = sec_har_per(SortedData, phi_k);
+
+%% Corrected Argument of Latitude
+[Uk] = arg_lat_corr(phi_k, delta_uk);
+
+%% Corrected Radius
+[Rk] = rad_corr(SortedData, A, Ek, delta_rk);
+
+%% Corrected Inclination
+[IkC1, IkP1, IkP2] = inc_corr(SortedData, delta_ik, tkC1, tkP1, tkP2);
+
+%% Positions in Orbital Plane
+[Xk_op, Yk_op] = orb_plane(Rk, Uk);
+
+%% Corrected Longitude of Ascending Node
+[omega_kC1, omega_kP1, omega_kP2] = asc_node_corr(SortedData, tkC1,...
+    tkP1, tkP2);
+
+%% Earth-Fixed Coordinates
+[XkC1, XkP1, XkP2, YkC1, YkP1, YkP2, ZkC1, ZkP1, ZkP2] =...
+    e_fix_coor(IkC1, IkP1, IkP2, Xk_op, Yk_op, omega_kC1, omega_kP1, omega_kP2);

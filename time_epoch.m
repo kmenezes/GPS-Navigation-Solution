@@ -10,10 +10,12 @@ function [tkP1, tkP2, tkC1, tt_P1, tt_P2, tt_C1] = time_epoch(SortedData)
 
 c = physconst('LightSpeed');
 
+%travel time
 tt_P1 = SortedData(:,6) - SortedData(:,11)./c;
 tt_P2 = SortedData(:,6) - SortedData(:,12)./c;
 tt_C1 = SortedData(:,6) - SortedData(:,13)./c;
 
+%Time ephemeris reference epochs
 tkP1 = check_tk(tt_P1 - SortedData(:,36));
 tkP2 = check_tk(tt_P2 - SortedData(:,36));
 tkC1 = check_tk(tt_C1 - SortedData(:,36));
